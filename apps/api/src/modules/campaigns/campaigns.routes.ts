@@ -50,6 +50,34 @@ export const campaignRoutes: FastifyPluginAsync = async (app: FastifyInstance) =
     return reply.send(campaign);
   });
 
+  app.post("/:id/pause", async (req: any, reply) => {
+    const orgId = req.auth?.orgId || req.auth?.userId || "mock_org";
+    const campaign = await service.pauseCampaign(orgId, req.params.id);
+    return reply.send(campaign);
+  });
+
+  app.put("/:id", {
+    schema: {
+      body: {
+        type: "object",
+        properties: {
+          name: { type: "string" },
+          fromEmail: { type: "string" }
+        }
+      }
+    }
+  }, async (req: any, reply) => {
+    const orgId = req.auth?.orgId || req.auth?.userId || "mock_org";
+    const campaign = await service.updateCampaign(orgId, req.params.id, req.body);
+    return reply.send(campaign);
+  });
+
+  app.get("/:id/leads", async (req: any, reply) => {
+    const orgId = req.auth?.orgId || req.auth?.userId || "mock_org";
+    const leads = await service.getCampaignLeads(orgId, req.params.id);
+    return reply.send(leads);
+  });
+
   app.post("/:id/leads", {
     schema: {
       body: {

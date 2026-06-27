@@ -77,6 +77,42 @@ export class CampaignsService {
     });
   }
 
+  public async pauseCampaign(orgId: string, id: string) {
+    const campaign = await this.getCampaign(orgId, id);
+    
+    if (campaign.status !== CampaignStatus.ACTIVE) {
+      throw new AppError("Only active campaigns can be paused", 400);
+    }
+
+    return this.prisma.campaign.update({
+      where: { id },
+      data: {
+        status: CampaignStatus.PAUSED
+      }
+    });
+  }
+
+  public async updateCampaign(orgId: string, id: string, data: { name?: string; fromEmail?: string }) {
+    await this.getCampaign(orgId, id); // Verify it exists and user owns it
+
+    return this.prisma.campaign.update({
+      where: { id },
+      data
+    });
+  }
+
+  public async getCampaignLeads(orgId: string, campaignId: string) {
+    await this.getCampaign(orgId, campaignId); // Verify it exists and user owns it
+
+    return this.prisma.campaignLead.findMany({
+      where: { campaignId },
+      include: {
+        lead: true,
+        sequenceEnrollments: true // Include enrollments to get the status
+      } as any
+    });
+  }
+
   public async addLeadToCampaign(orgId: string, campaignId: string, leadId: string) {
     const campaign = await this.getCampaign(orgId, campaignId);
     
