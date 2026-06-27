@@ -29,6 +29,7 @@ import { workflowsRoutes } from "./modules/workflows/workflows.routes";
 import { notificationsRoutes } from "./modules/notifications/notifications.routes";
 import { proposalsRoutes } from "./modules/proposals/proposals.routes";
 import { reviewsRoutes } from "./modules/reviews/reviews.routes";
+import { marketplaceRoutes } from "./modules/marketplace/marketplace.routes";
 
 export async function buildServer() {
   const app = Fastify({
@@ -162,6 +163,7 @@ export async function buildServer() {
   await app.register(notificationsRoutes, { prefix: "/notifications" });
   await app.register(proposalsRoutes, { prefix: "/proposals" });
   await app.register(reviewsRoutes, { prefix: "/reviews" });
+  await app.register(marketplaceRoutes, { prefix: "/marketplace" });
   // await app.register(billingRoutes, { prefix: "/billing" });
 
   return app;
