@@ -697,7 +697,7 @@ Each **Part** is a self-contained, shippable milestone. Complete one before star
   - [ ] `SequenceEditor.tsx` — visual sequence builder
   - [ ] `EmailPreview.tsx` — preview rendered email with tracking
 
-**Part 5 Verification:**
+**  :**
 - [x] Create email campaign for 3 leads → AI generates 3 personalized emails
 - [x] User reviews and approves → emails sent via Resend
 - [x] Open tracking pixel fires → open recorded in DB
