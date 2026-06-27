@@ -23,4 +23,27 @@ export const sequenceRoutes: FastifyPluginAsync = async (app: FastifyInstance) =
     const step = await service.addSequenceStep(orgId, req.params.campaignId, req.params.sequenceId, req.body);
     return reply.status(201).send(step);
   });
+  app.get("/:campaignId/sequences", async (req: any, reply) => {
+    const orgId = req.auth?.orgId || req.auth?.userId || "mock_org";
+    const sequences = await service.getSequences(orgId, req.params.campaignId);
+    return reply.send(sequences);
+  });
+
+  app.put("/:campaignId/sequences/:sequenceId", async (req: any, reply) => {
+    const orgId = req.auth?.orgId || req.auth?.userId || "mock_org";
+    const sequence = await service.updateSequence(orgId, req.params.campaignId, req.params.sequenceId, req.body);
+    return reply.send(sequence);
+  });
+
+  app.put("/:campaignId/sequences/:sequenceId/steps/:stepId", async (req: any, reply) => {
+    const orgId = req.auth?.orgId || req.auth?.userId || "mock_org";
+    const step = await service.updateSequenceStep(orgId, req.params.campaignId, req.params.sequenceId, req.params.stepId, req.body);
+    return reply.send(step);
+  });
+
+  app.delete("/:campaignId/sequences/:sequenceId/steps/:stepId", async (req: any, reply) => {
+    const orgId = req.auth?.orgId || req.auth?.userId || "mock_org";
+    await service.deleteSequenceStep(orgId, req.params.campaignId, req.params.sequenceId, req.params.stepId);
+    return reply.status(204).send();
+  });
 };
