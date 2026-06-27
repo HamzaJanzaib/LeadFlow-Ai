@@ -16,6 +16,9 @@ import { clerkWebhookRoutes } from "./modules/webhooks/clerk.routes";
 import { orgRoutes } from "./modules/organizations/organizations.routes";
 import { apiKeyRoutes } from "./modules/api-keys/api-keys.routes";
 import { billingRoutes } from "./modules/billing/billing.routes";
+import { leadsRoutes } from "./modules/leads/leads.routes";
+import { contactsRoutes } from "./modules/contacts/contacts.routes";
+import { crmRoutes } from "./modules/crm/crm.routes";
 
 export async function buildServer() {
   const app = Fastify({
@@ -135,7 +138,9 @@ export async function buildServer() {
   // Future modules registered here:
   // await app.register(authRoutes, { prefix: "/auth" });
   // await app.register(orgRoutes, { prefix: "/organizations" });
-  // await app.register(leadsRoutes, { prefix: "/leads" });
+  await app.register(leadsRoutes, { prefix: "/leads" });
+  await app.register(contactsRoutes, { prefix: "/" }); // contacts routes already have /leads/:leadId in their path
+  await app.register(crmRoutes, { prefix: "/crm" });
   await app.register(clerkWebhookRoutes, { prefix: "/webhooks" });
   // await app.register(campaignRoutes, { prefix: "/campaigns" });
   // await app.register(aiRoutes, { prefix: "/ai" });

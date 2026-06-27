@@ -34,12 +34,17 @@ async function request<T>(
     requestHeaders["Authorization"] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const fetchOptions: RequestInit = {
     method,
     headers: requestHeaders,
-    body: body ? JSON.stringify(body) : undefined,
     credentials: "include",
-  });
+  };
+  
+  if (body !== undefined) {
+    fetchOptions.body = JSON.stringify(body);
+  }
+
+  const response = await fetch(`${API_BASE_URL}${path}`, fetchOptions);
 
   if (!response.ok) {
     let errorData: any;
