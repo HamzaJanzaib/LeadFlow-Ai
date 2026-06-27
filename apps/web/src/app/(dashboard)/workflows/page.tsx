@@ -5,6 +5,8 @@ import { apiClient } from "@/lib/api-client";
 import Link from "next/link";
 import { Plus, Settings, Play, Pause, Clock, AlertTriangle } from "lucide-react";
 import { format } from "date-fns";
+import { Skeleton } from "@/components/ui/Skeleton";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 export default function WorkflowsPage() {
   const { data: workflows, isLoading } = useQuery({
@@ -34,25 +36,18 @@ export default function WorkflowsPage() {
       </div>
 
       {isLoading ? (
-        <div className="space-y-4 animate-pulse">
+        <div className="space-y-4">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-24 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+            <Skeleton key={i} className="h-24 rounded-lg" />
           ))}
         </div>
       ) : workflows?.length === 0 ? (
-        <div className="text-center py-20 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-dashed border-gray-300 dark:border-gray-700">
-          <Settings className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white">No workflows yet</h3>
-          <p className="text-gray-500 dark:text-gray-400 mt-1 mb-6 max-w-md mx-auto">
-            Create your first workflow to automate sending emails when new leads are discovered.
-          </p>
-          <Link 
-            href="/workflows/new" 
-            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-blue-600 text-white shadow hover:bg-blue-700 h-9 px-4 py-2"
-          >
-            Create Workflow
-          </Link>
-        </div>
+        <EmptyState 
+          title="No workflows yet"
+          description="Create your first workflow to automate sending emails when new leads are discovered."
+          actionLabel="Create Workflow"
+          actionHref="/workflows/new"
+        />
       ) : (
         <div className="bg-white dark:bg-[#1a1c23] border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden">
           <table className="w-full text-sm text-left">

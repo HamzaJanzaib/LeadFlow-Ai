@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Plus, Download, Upload, Filter, Search, MoreHorizontal } from "lucide-react";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 const DUMMY_LEADS = [
   { id: "1", company: "Acme Corp", email: "contact@acme.com", status: "NEW", score: 85, industry: "Technology" },
@@ -12,6 +13,11 @@ const DUMMY_LEADS = [
 
 export default function LeadsPage() {
   const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredLeads = DUMMY_LEADS.filter(lead => 
+    lead.company.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    lead.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
@@ -60,35 +66,49 @@ export default function LeadsPage() {
               </tr>
             </thead>
             <tbody>
-              {DUMMY_LEADS.map((lead) => (
-                <tr key={lead.id} className="border-b last:border-0 hover:bg-muted/50 transition-colors group">
-                  <td className="px-6 py-4 font-medium">
-                    <Link href={`/leads/${lead.id}`} className="hover:underline hover:text-primary">
-                      {lead.company}
-                    </Link>
-                  </td>
-                  <td className="px-6 py-4 text-muted-foreground">{lead.email}</td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
-                      {lead.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center">
-                      <div className="w-full bg-secondary rounded-full h-2.5 mr-2 max-w-[60px]">
-                        <div className="bg-green-500 h-2.5 rounded-full" style={{ width: `${lead.score}%` }}></div>
-                      </div>
-                      <span className="text-xs font-medium">{lead.score}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-muted-foreground">{lead.industry}</td>
-                  <td className="px-6 py-4 text-right">
-                    <button className="text-muted-foreground hover:text-foreground">
-                      <MoreHorizontal className="h-5 w-5" />
-                    </button>
+              {filteredLeads.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="p-0">
+                    <EmptyState 
+                      title="No leads found"
+                      description="You don't have any leads matching your criteria yet."
+                      actionLabel="Add Lead"
+                      actionHref="/leads/new"
+                      className="border-0 bg-transparent rounded-none"
+                    />
                   </td>
                 </tr>
-              ))}
+              ) : (
+                filteredLeads.map((lead) => (
+                  <tr key={lead.id} className="border-b last:border-0 hover:bg-muted/50 transition-colors group">
+                    <td className="px-6 py-4 font-medium">
+                      <Link href={`/leads/${lead.id}`} className="hover:underline hover:text-primary">
+                        {lead.company}
+                      </Link>
+                    </td>
+                    <td className="px-6 py-4 text-muted-foreground">{lead.email}</td>
+                    <td className="px-6 py-4">
+                      <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                        {lead.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center">
+                        <div className="w-full bg-secondary rounded-full h-2.5 mr-2 max-w-[60px]">
+                          <div className="bg-green-500 h-2.5 rounded-full" style={{ width: `${lead.score}%` }}></div>
+                        </div>
+                        <span className="text-xs font-medium">{lead.score}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-muted-foreground">{lead.industry}</td>
+                    <td className="px-6 py-4 text-right">
+                      <button className="text-muted-foreground hover:text-foreground">
+                        <MoreHorizontal className="h-5 w-5" />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

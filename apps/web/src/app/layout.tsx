@@ -56,6 +56,10 @@ export const metadata: Metadata = {
   },
 };
 
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { ErrorBoundary } from "@/components/global/ErrorBoundary";
+import { CommandPalette } from "@/components/global/CommandPalette";
+
 export default function RootLayout({
   children,
 }: {
@@ -68,17 +72,22 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-background font-sans antialiased">
-        <AuthProvider>
-          <QueryProvider>
-            {children}
-            <Toaster
-              position="bottom-right"
-              richColors
-              expand={false}
-              duration={4000}
-            />
-          </QueryProvider>
-        </AuthProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ErrorBoundary>
+            <AuthProvider>
+              <QueryProvider>
+                <CommandPalette />
+                {children}
+                <Toaster
+                  position="bottom-right"
+                  richColors
+                  expand={false}
+                  duration={4000}
+                />
+              </QueryProvider>
+            </AuthProvider>
+          </ErrorBoundary>
+        </ThemeProvider>
       </body>
     </html>
   );

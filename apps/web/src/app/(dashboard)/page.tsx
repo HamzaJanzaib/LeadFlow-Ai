@@ -5,6 +5,7 @@ import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import { Users, Megaphone, MousePointerClick, MessageSquareReply, ArrowRight, Bot, Target } from "lucide-react";
+import { Skeleton } from "@/components/ui/Skeleton";
 
 export default function DashboardHomePage() {
   const { isLoaded, userId } = useAuth();
@@ -28,9 +29,9 @@ export default function DashboardHomePage() {
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-pulse">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[1, 2, 3, 4].map(i => (
-            <div key={i} className="h-32 bg-gray-200 dark:bg-gray-800 rounded-xl"></div>
+            <Skeleton key={i} className="h-32 rounded-xl" />
           ))}
         </div>
       ) : (

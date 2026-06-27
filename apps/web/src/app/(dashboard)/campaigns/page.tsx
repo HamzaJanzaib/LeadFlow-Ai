@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Plus, BarChart2, Mail, Users, ArrowRight } from "lucide-react";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 export default async function CampaignsPage() {
   // In a real implementation, we'd fetch from API
@@ -99,49 +100,63 @@ export default async function CampaignsPage() {
               </tr>
             </thead>
             <tbody className="[&_tr:last-child]:border-0">
-              {campaigns.map((campaign) => (
-                <tr key={campaign.id} className="border-b border-border hover:bg-muted/50 transition-colors">
-                  <td className="p-4 align-middle font-medium">
-                    <Link href={`/campaigns/${campaign.id}`} className="hover:underline">
-                      {campaign.name}
-                    </Link>
-                  </td>
-                  <td className="p-4 align-middle">
-                    <div className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
-                      campaign.status === 'ACTIVE' 
-                        ? 'border-transparent bg-primary/10 text-primary hover:bg-primary/20'
-                        : 'border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80'
-                    }`}>
-                      {campaign.status}
-                    </div>
-                  </td>
-                  <td className="p-4 align-middle">
-                    {campaign.channel}
-                  </td>
-                  <td className="p-4 align-middle">
-                    {campaign.leadsCount}
-                  </td>
-                  <td className="p-4 align-middle">
-                    {campaign.status === "ACTIVE" ? (
-                      <div className="flex gap-4 text-xs text-muted-foreground">
-                        <span>Opens: <span className="font-medium text-foreground">{campaign.opens}</span></span>
-                        <span>Replies: <span className="font-medium text-foreground">{campaign.replies}</span></span>
-                      </div>
-                    ) : (
-                      <span className="text-xs text-muted-foreground">-</span>
-                    )}
-                  </td>
-                  <td className="p-4 align-middle text-right">
-                    <Link 
-                      href={`/campaigns/${campaign.id}`}
-                      className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-9 w-9"
-                    >
-                      <ArrowRight className="h-4 w-4" />
-                      <span className="sr-only">View Campaign</span>
-                    </Link>
+              {campaigns.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="p-0">
+                    <EmptyState 
+                      title="No campaigns found"
+                      description="Create a campaign to start reaching out to your leads."
+                      actionLabel="Create Campaign"
+                      actionHref="/campaigns/new"
+                      className="border-0 bg-transparent rounded-none"
+                    />
                   </td>
                 </tr>
-              ))}
+              ) : (
+                campaigns.map((campaign) => (
+                  <tr key={campaign.id} className="border-b border-border hover:bg-muted/50 transition-colors">
+                    <td className="p-4 align-middle font-medium">
+                      <Link href={`/campaigns/${campaign.id}`} className="hover:underline">
+                        {campaign.name}
+                      </Link>
+                    </td>
+                    <td className="p-4 align-middle">
+                      <div className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
+                        campaign.status === 'ACTIVE' 
+                          ? 'border-transparent bg-primary/10 text-primary hover:bg-primary/20'
+                          : 'border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                      }`}>
+                        {campaign.status}
+                      </div>
+                    </td>
+                    <td className="p-4 align-middle">
+                      {campaign.channel}
+                    </td>
+                    <td className="p-4 align-middle">
+                      {campaign.leadsCount}
+                    </td>
+                    <td className="p-4 align-middle">
+                      {campaign.status === "ACTIVE" ? (
+                        <div className="flex gap-4 text-xs text-muted-foreground">
+                          <span>Opens: <span className="font-medium text-foreground">{campaign.opens}</span></span>
+                          <span>Replies: <span className="font-medium text-foreground">{campaign.replies}</span></span>
+                        </div>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">-</span>
+                      )}
+                    </td>
+                    <td className="p-4 align-middle text-right">
+                      <Link 
+                        href={`/campaigns/${campaign.id}`}
+                        className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-9 w-9"
+                      >
+                        <ArrowRight className="h-4 w-4" />
+                        <span className="sr-only">View Campaign</span>
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
