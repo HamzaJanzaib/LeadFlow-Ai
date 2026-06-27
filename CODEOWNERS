@@ -1,0 +1,13 @@
+# These owners will be the default reviewers for everything
+*       @hamza-janzaib
+
+# Core Infrastructure
+/packages/db/   @hamza-janzaib
+/infra/         @hamza-janzaib
+/docker-compose.yml @hamza-janzaib
+
+# AI Agents
+/packages/ai/   @hamza-janzaib
+
+# GitHub Actions
+/.github/       @hamza-janzaib
