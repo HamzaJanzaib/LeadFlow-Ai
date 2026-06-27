@@ -1,0 +1,61 @@
+import Link from 'next/link'
+import { ArrowLeft } from 'lucide-react'
+
+export const metadata = {
+  title: "Introducing LeadFlow AI",
+  description: "The modern platform for sales teams.",
+};
+
+<div className="py-20 md:py-28">
+  <div className="container px-4 max-w-3xl mx-auto">
+    <Link href="/blog" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground mb-8 transition-colors">
+      <ArrowLeft className="mr-2 h-4 w-4" />
+      Back to blog
+    </Link>
+
+    <article className="prose prose-slate dark:prose-invert max-w-none">
+      <div className="mb-8">
+        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">Introducing LeadFlow AI</h1>
+        <div className="flex items-center gap-4 text-muted-foreground text-sm">
+          <time dateTime="2026-06-27">June 27, 2026</time>
+          <span>•</span>
+          <span>Jane Doe</span>
+        </div>
+      </div>
+
+      ---
+
+      Sales teams today are overwhelmed with administrative work. Updating the CRM, qualifying leads, and drafting proposals take away from what salespeople do best: selling.
+
+      Today, we are thrilled to announce **LeadFlow AI**, a modern platform that automates the busywork.
+
+      ## What is LeadFlow AI?
+
+      LeadFlow AI is a comprehensive tool suite designed for freelancers, agencies, and enterprise sales teams. We combine traditional CRM features with advanced AI agents that can:
+
+      1. **Qualify leads automatically** based on firmographics and behavioral signals.
+      2. **Draft tailored proposals** using your historical data as templates.
+      3. **Engage prospects** and follow up intelligently.
+
+      > "LeadFlow AI has completely transformed how our agency handles inbound leads. What used to take hours now takes minutes." - Early Beta User
+
+      ## How it works
+
+      Our system integrates directly into your existing workflow. You simply connect your lead sources (like your website, LinkedIn, or email), and our agents take over. 
+
+      We believe that AI shouldn't replace sales professionals; it should give them superpowers. With LeadFlow, your team can focus on closing deals and building relationships, while our AI handles the data entry and initial outreach.
+
+      ### Key Features
+
+      - **Smart Lead Scoring:** Instantly know which leads are hot and which need nurturing.
+      - **Proposal Generator:** Create beautiful, customized proposals with a single click.
+      - **Client Portal:** Give your clients a branded experience to review and accept proposals.
+
+      ## Try it today
+
+      LeadFlow AI is available now. You can get started with a 14-day free trial on any of our plans. 
+
+      [Start your free trial](/signup) today and see how LeadFlow can supercharge your sales pipeline.
+    </article>
+  </div>
+</div>
