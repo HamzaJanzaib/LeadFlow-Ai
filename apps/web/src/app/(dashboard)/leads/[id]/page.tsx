@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Edit, Trash2, Mail, ExternalLink, Activity, Globe } from "lucide-react";
+import { ArrowLeft, Edit, Trash2, Mail, ExternalLink, Activity, Globe, Sparkles } from "lucide-react";
 
 export default function LeadDetailPage({ params }: { params: { id: string } }) {
   // Mock data for display
@@ -132,11 +132,36 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
               <div className="bg-green-500 h-2 rounded-full" style={{ width: "95%" }}></div>
             </div>
             
-            <div className="mt-6 p-4 bg-muted rounded-lg border">
-              <p className="text-sm font-medium">AI Sales Insight</p>
-              <p className="text-xs text-muted-foreground mt-1">
+            <div className="mt-6 p-4 bg-muted rounded-lg border relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+              <p className="text-sm font-semibold flex items-center">
+                <Sparkles className="h-4 w-4 mr-2 text-primary" />
+                AI Sales Insight
+              </p>
+              <p className="text-sm text-muted-foreground mt-2">
                 "Their website performance is lagging due to heavy images. Pitch our fast-loading CDN integration services."
               </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* AI Outreach Panel */}
+      <div className="rounded-xl border border-primary/20 bg-card text-card-foreground shadow-sm">
+        <div className="p-6 pb-4 border-b bg-muted/30">
+          <h3 className="font-semibold leading-none tracking-tight flex items-center text-lg">
+            <Sparkles className="h-5 w-5 mr-2 text-primary" />
+            AI Outreach Generator
+          </h3>
+          <p className="text-sm text-muted-foreground mt-1">Generate a highly personalized email sequence based on {lead.company}'s data.</p>
+        </div>
+        <div className="p-6 space-y-4">
+          <div className="flex gap-4">
+            <button className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground h-10 px-4 transition-colors hover:bg-primary/90">
+              Generate Draft
+            </button>
+            <div className="flex-1 bg-muted rounded-md border p-4 text-sm text-muted-foreground font-mono">
+              // Click generate to see drafted email...
             </div>
           </div>
         </div>
