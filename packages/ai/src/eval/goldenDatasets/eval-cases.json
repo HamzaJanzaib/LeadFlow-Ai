@@ -1,0 +1,31 @@
+[
+  {
+    "id": "tc-lead-disc-1",
+    "agent": "lead-discovery",
+    "input": {
+      "goal": "Find 5 B2B SaaS startups in the CRM space with less than 50 employees."
+    },
+    "expectedOutput": {
+      "criteria": [
+        "Identified 5 unique companies",
+        "Companies are in B2B SaaS",
+        "Companies have less than 50 employees"
+      ]
+    }
+  },
+  {
+    "id": "tc-outreach-1",
+    "agent": "outreach",
+    "input": {
+      "goal": "Write a highly personalized cold email to the VP of Sales at Acme Corp, mentioning their recent Series A funding."
+    },
+    "expectedOutput": {
+      "criteria": [
+        "Email is addressed to VP of Sales",
+        "Email mentions Acme Corp",
+        "Email references Series A funding",
+        "Tone is professional yet engaging"
+      ]
+    }
+  }
+]

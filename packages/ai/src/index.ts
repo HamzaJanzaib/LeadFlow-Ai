@@ -45,3 +45,6 @@ export * from "./mcp/servers/mcp-knowledge";
 export * from "./mcp/servers/mcp-email";
 export * from "./mcp/servers/mcp-storage";
 export * from "./mcp/servers/mcp-analytics";
+
+export * from "./eval/EvalJudge";
+export * from "./eval/EvalRunner";
