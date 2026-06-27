@@ -37,3 +37,11 @@ export * from "./agents/knowledge/knowledge.agent";
 export * from "./graph/lead-discovery.graph";
 export * from "./graph/outreach.graph";
 export * from "./graph/crm.graph";
+
+export * from "./mcp/MCPClient";
+export * from "./mcp/MCPMiddleware";
+export * from "./mcp/servers/mcp-crm";
+export * from "./mcp/servers/mcp-knowledge";
+export * from "./mcp/servers/mcp-email";
+export * from "./mcp/servers/mcp-storage";
+export * from "./mcp/servers/mcp-analytics";
