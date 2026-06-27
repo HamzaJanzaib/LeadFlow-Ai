@@ -1,0 +1,13 @@
+{
+  "name": "@leadflow/config",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    "./typescript/base": "./typescript/base.json",
+    "./typescript/next": "./typescript/next.json",
+    "./typescript/node": "./typescript/node.json",
+    "./eslint/base": "./eslint/base.js",
+    "./eslint/next": "./eslint/next.js",
+    "./prettier": "./prettier/index.js"
+  }
+}

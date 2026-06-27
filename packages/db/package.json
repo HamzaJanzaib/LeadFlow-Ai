@@ -1,0 +1,31 @@
+{
+  "name": "@leadflow/db",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:prod": "prisma migrate deploy",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:reset": "prisma migrate reset --force",
+    "db:studio": "prisma studio",
+    "db:push": "prisma db push",
+    "db:status": "prisma migrate status",
+    "db:migrate:new": "prisma migrate dev --name",
+    "build": "echo 'db package has no build step'",
+    "clean": "rm -rf node_modules"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.16.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@leadflow/config": "workspace:*",
+    "prisma": "^5.16.0",
+    "tsx": "^4.16.0",
+    "typescript": "^5.5.0",
+    "@types/node": "^20.14.0"
+  }
+}
