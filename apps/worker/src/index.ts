@@ -34,6 +34,6 @@ process.on("SIGTERM", () => void shutdown("SIGTERM"));
 process.on("SIGINT", () => void shutdown("SIGINT"));
 
 void main().catch((err) => {
-  logger.error("Worker startup failed", { err });
+  logger.error("Worker startup failed: " + (err instanceof Error ? err.message : String(err)));
   process.exit(1);
 });

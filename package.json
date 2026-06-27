@@ -16,7 +16,9 @@
     "db:studio": "pnpm --filter @leadflow/db db:studio",
     "db:push": "pnpm --filter @leadflow/db db:push",
     "ai:eval": "pnpm --filter @leadflow/ai eval",
-    "clean": "turbo run clean && rm -rf node_modules"
+    "clean": "turbo run clean && rm -rf node_modules",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
   },
   "devDependencies": {
     "turbo": "^2.0.0",
