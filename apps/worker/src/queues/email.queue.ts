@@ -23,6 +23,13 @@ const emailProcessor = async (job: Job<EmailJobData>) => {
   
   logger.info(`[Email Processor] Sending email to ${to} (EventID: ${eventId})`);
 
+  // Wrap links in click tracking URL
+  const API_URL = process.env.API_URL || "http://localhost:4000/api/v1";
+  const processedHtml = htmlContent.replace(
+    /href=["'](http[^"']+)["']/g, 
+    (match, url) => `href="${API_URL}/track/click/${eventId}?url=${encodeURIComponent(url)}"`
+  );
+
   try {
     if (resendApiKey === "re_mock") {
       logger.warn(`[Email Processor] MOCK SEND: No RESEND_API_KEY found.`);
@@ -32,7 +39,7 @@ const emailProcessor = async (job: Job<EmailJobData>) => {
         from: "LeadFlow AI <hello@yourdomain.com>", // Update to actual verified domain later
         to,
         subject,
-        html: htmlContent
+        html: processedHtml
       });
     }
 

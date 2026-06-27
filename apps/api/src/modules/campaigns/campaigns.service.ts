@@ -108,7 +108,7 @@ export class CampaignsService {
       where: { campaignId },
       include: {
         lead: true,
-        sequenceEnrollments: true // Include enrollments to get the status
+        enrollments: true // Include enrollments to get the status
       } as any
     });
   }

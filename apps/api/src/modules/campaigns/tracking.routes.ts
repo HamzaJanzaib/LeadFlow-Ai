@@ -45,4 +45,21 @@ export const trackingRoutes: FastifyPluginAsync = async (app: FastifyInstance) =
     }
     return reply.status(200).send("OK");
   });
+
+  app.post("/webhooks/bounce", async (req: any, reply) => {
+    // Resend bounce payload format depends on provider, assuming { email }
+    const { email } = req.body;
+    if (email) {
+      await service.handleBounce(email);
+    }
+    return reply.status(200).send("OK");
+  });
+
+  app.post("/webhooks/unsubscribe", async (req: any, reply) => {
+    const { email } = req.body;
+    if (email) {
+      await service.handleUnsubscribe(email);
+    }
+    return reply.status(200).send("OK");
+  });
 };

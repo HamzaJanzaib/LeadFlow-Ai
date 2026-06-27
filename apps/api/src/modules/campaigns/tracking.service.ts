@@ -65,7 +65,49 @@ export class TrackingService {
       if (enrollment.campaignLeadId) {
         await this.prisma.campaignLead.update({
           where: { id: enrollment.campaignLeadId },
-          data: { status: "REPLIED" }
+          data: { status: "STOPPED", stoppedReason: "REPLIED" }
+        });
+      }
+    }
+  }
+
+  public async handleBounce(email: string) {
+    const leads = await this.prisma.campaignLead.findMany({
+      where: { lead: { email } },
+      include: { enrollments: true }
+    });
+
+    for (const lead of leads) {
+      await this.prisma.campaignLead.update({
+        where: { id: lead.id },
+        data: { status: "BOUNCED" } // Using BOUNCED if applicable, or marking unsubscribed
+      });
+
+      for (const enrollment of lead.enrollments) {
+        await this.prisma.sequenceEnrollment.update({
+          where: { id: enrollment.id },
+          data: { status: "failed" }
+        });
+      }
+    }
+  }
+
+  public async handleUnsubscribe(email: string) {
+    const leads = await this.prisma.campaignLead.findMany({
+      where: { lead: { email } },
+      include: { enrollments: true }
+    });
+
+    for (const lead of leads) {
+      await this.prisma.campaignLead.update({
+        where: { id: lead.id },
+        data: { status: "UNSUBSCRIBED" }
+      });
+
+      for (const enrollment of lead.enrollments) {
+        await this.prisma.sequenceEnrollment.update({
+          where: { id: enrollment.id },
+          data: { status: "skipped" }
         });
       }
     }
