@@ -1,10 +1,10 @@
 import "dotenv/config";
 import { logger } from "./shared/logger";
 
-// Queue imports (will be registered as Part 3-5 adds processors)
 // import { startAiWorker } from "./queues/ai.queue";
 // import { startEnrichWorker } from "./queues/enrich.queue";
-// import { startEmailWorker } from "./queues/email.queue";
+import { startEmailWorker } from "./queues/email.queue";
+import { startSequenceScheduler } from "./schedulers/sequence.scheduler";
 // import { startScanWorker } from "./queues/scan.queue";
 // import { startSyncWorker } from "./queues/sync.queue";
 // import { startReportWorker } from "./queues/report.queue";
@@ -12,10 +12,10 @@ import { logger } from "./shared/logger";
 async function main() {
   logger.info("🔧 LeadFlow AI Worker starting...");
 
-  // Workers will be started here as they are implemented in Parts 3-5
   // await startAiWorker();
   // await startEnrichWorker();
-  // await startEmailWorker();
+  await startEmailWorker();
+  await startSequenceScheduler();
   // await startScanWorker();
   // await startSyncWorker();
   // await startReportWorker();
