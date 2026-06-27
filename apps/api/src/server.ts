@@ -19,6 +19,7 @@ import { billingRoutes } from "./modules/billing/billing.routes";
 import { leadsRoutes } from "./modules/leads/leads.routes";
 import { contactsRoutes } from "./modules/contacts/contacts.routes";
 import { crmRoutes } from "./modules/crm/crm.routes";
+import { aiRoutes } from "./modules/ai/ai.routes";
 
 export async function buildServer() {
   const app = Fastify({
@@ -143,7 +144,7 @@ export async function buildServer() {
   await app.register(crmRoutes, { prefix: "/crm" });
   await app.register(clerkWebhookRoutes, { prefix: "/webhooks" });
   // await app.register(campaignRoutes, { prefix: "/campaigns" });
-  // await app.register(aiRoutes, { prefix: "/ai" });
+  await app.register(aiRoutes, { prefix: "/ai" });
   // await app.register(analyticsRoutes, { prefix: "/analytics" });
   // await app.register(billingRoutes, { prefix: "/billing" });
 

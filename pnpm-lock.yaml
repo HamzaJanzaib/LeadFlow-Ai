@@ -44,6 +44,9 @@ importers:
       '@fastify/websocket':
         specifier: ^10.0.1
         version: 10.0.1
+      '@langchain/core':
+        specifier: ^0.3.26
+        version: 0.3.80(openai@4.104.0(ws@8.21.0)(zod@3.25.76))
       '@leadflow/ai':
         specifier: workspace:*
         version: link:../../packages/ai

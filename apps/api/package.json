@@ -21,6 +21,7 @@
     "@fastify/swagger": "^8.14.0",
     "@fastify/swagger-ui": "^4.0.1",
     "@fastify/websocket": "^10.0.1",
+    "@langchain/core": "^0.3.26",
     "@leadflow/ai": "workspace:*",
     "@leadflow/db": "workspace:*",
     "bullmq": "^5.12.0",
