@@ -33,3 +33,7 @@ export * from "./agents/outreach/outreach.agent";
 export * from "./agents/crm/crm.agent";
 export * from "./agents/analytics/analytics.agent";
 export * from "./agents/knowledge/knowledge.agent";
+
+export * from "./graph/lead-discovery.graph";
+export * from "./graph/outreach.graph";
+export * from "./graph/crm.graph";
