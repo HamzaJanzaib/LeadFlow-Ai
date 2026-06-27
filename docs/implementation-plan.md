@@ -939,14 +939,14 @@ Each **Part** is a self-contained, shippable milestone. Complete one before star
   - [ ] Rollback on failure
 
 **Part 7 Verification:**
-- [ ] Marketing landing page is live and SEO-ready
-- [ ] Proposal generated from deal → PDF downloadable
-- [ ] Admin can view all orgs and users
-- [ ] Client portal accessible via shared link
-- [ ] Review request email sent after deal marked Won
-- [ ] Marketplace workflow template imported in one click
-- [ ] `kubectl get pods -n leadflow-prod` → all pods Running
-- [ ] Grafana dashboard shows live traffic
+- `[x]` Marketing landing page is live and SEO-ready
+- `[x]` Proposal generated from deal → PDF downloadable
+- `[x]` Admin can view all orgs and users
+- `[x]` Client portal accessible via shared link
+- `[x]` Review request email sent after deal marked Won
+- `[x]` Marketplace workflow template imported in one click
+- `[x]` `kubectl get pods -n leadflow-prod` → all pods Running
+- `[x]` Grafana dashboard shows live traffic
 
 ---
 

@@ -7,6 +7,7 @@ import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
 import rawBody from "fastify-raw-body";
 import fastifyWebsocket from "@fastify/websocket";
+import fastifyMetrics from "fastify-metrics";
 
 import { prismaPlugin } from "./plugins/prisma";
 import { redisPlugin } from "./plugins/redis";
@@ -137,6 +138,7 @@ export async function buildServer() {
   await app.register(redisPlugin);
   await app.register(clerkPlugin);
   await app.register(fastifyWebsocket);
+  await app.register(fastifyMetrics, { endpoint: "/metrics" });
 
   // ── Error Handler ────────────────────────────────────────────────────────
   app.setErrorHandler(errorHandler);

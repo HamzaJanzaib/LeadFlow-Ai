@@ -1,5 +1,33 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "LeadFlow AI | Supercharge Your Sales Pipeline",
+  description: "LeadFlow AI automates lead qualification, proposal generation, and follow-ups. Close deals faster without the busywork.",
+  openGraph: {
+    title: "LeadFlow AI | Supercharge Your Sales Pipeline",
+    description: "LeadFlow AI automates lead qualification, proposal generation, and follow-ups. Close deals faster without the busywork.",
+    url: "https://leadflow.ai",
+    siteName: "LeadFlow AI",
+    images: [
+      {
+        url: "https://leadflow.ai/og.png",
+        width: 1200,
+        height: 630,
+        alt: "LeadFlow AI",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "LeadFlow AI | Supercharge Your Sales Pipeline",
+    description: "LeadFlow AI automates lead qualification, proposal generation, and follow-ups. Close deals faster without the busywork.",
+    images: ["https://leadflow.ai/og.png"],
+  },
+};
 
 export default function MarketingLayout({
   children,
