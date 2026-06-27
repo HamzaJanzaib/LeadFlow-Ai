@@ -42,7 +42,7 @@ export class CampaignsService {
     const campaign = await this.prisma.campaign.findFirst({
       where: { id, organizationId: orgId },
       include: {
-        Sequence: {
+        sequences: {
           include: { steps: { orderBy: { dayDelay: 'asc' } } }
         },
         campaignLeads: {
@@ -64,7 +64,7 @@ export class CampaignsService {
       throw new AppError("Campaign is already active", 400);
     }
 
-    if (!campaign.Sequence || campaign.Sequence.length === 0) {
+    if (!campaign.sequences || campaign.sequences.length === 0) {
       throw new AppError("Cannot launch a campaign without a sequence", 400);
     }
 
@@ -133,9 +133,9 @@ export class CampaignsService {
     });
 
     // If campaign is active and has sequences, enroll the lead
-    if (campaign.status === CampaignStatus.ACTIVE && campaign.Sequence && campaign.Sequence.length > 0) {
+    if (campaign.status === CampaignStatus.ACTIVE && campaign.sequences && campaign.sequences.length > 0) {
       // Find the primary sequence (for now, assume the first one)
-      const primarySequence = campaign.Sequence[0];
+      const primarySequence = campaign.sequences[0];
       
       await this.prisma.sequenceEnrollment.create({
         data: {

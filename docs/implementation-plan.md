@@ -698,11 +698,11 @@ Each **Part** is a self-contained, shippable milestone. Complete one before star
   - [ ] `EmailPreview.tsx` — preview rendered email with tracking
 
 **Part 5 Verification:**
-- [ ] Create email campaign for 3 leads → AI generates 3 personalized emails
-- [ ] User reviews and approves → emails sent via Resend
-- [ ] Open tracking pixel fires → open recorded in DB
-- [ ] Day 3 follow-up auto-queued → sent when no reply
-- [ ] Lead replies → sequence stops automatically
+- [x] Create email campaign for 3 leads → AI generates 3 personalized emails
+- [x] User reviews and approves → emails sent via Resend
+- [x] Open tracking pixel fires → open recorded in DB
+- [x] Day 3 follow-up auto-queued → sent when no reply
+- [x] Lead replies → sequence stops automatically
 
 ---
 
