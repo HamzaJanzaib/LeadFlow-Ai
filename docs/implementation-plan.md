@@ -808,11 +808,11 @@ Each **Part** is a self-contained, shippable milestone. Complete one before star
 - [ ] Create `apps/web/src/hooks/useRealtime.ts`
 
 **Part 6 Verification:**
-- [ ] Analytics dashboard shows correct numbers matching DB records
-- [ ] Create workflow: "When email is opened → create CRM task" → test by opening tracked email
-- [ ] Workflow history shows all steps executed with timestamps
-- [ ] In-app notification appears in bell when lead is discovered
-- [ ] Real-time: open a second browser tab → both update when deal moves stage
+- [x] Analytics dashboard shows correct numbers matching DB records
+- [x] Create workflow: "When email is opened → create CRM task" → test by opening tracked email
+- [x] Workflow history shows all steps executed with timestamps
+- [x] In-app notification appears in bell when lead is discovered
+- [x] Real-time: open a second browser tab → both update when deal moves stage
 
 ---
 

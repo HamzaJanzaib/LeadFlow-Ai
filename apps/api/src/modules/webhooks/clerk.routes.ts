@@ -78,13 +78,13 @@ export async function clerkWebhookRoutes(app: FastifyInstance) {
           update: {
             name,
             slug: slug || name.toLowerCase().replace(/\s+/g, '-'),
-            logoUrl: image_url,
+            logoUrl: image_url ?? null,
           },
           create: {
             clerkOrgId: id as string,
             name,
             slug: slug || name.toLowerCase().replace(/\s+/g, '-'),
-            logoUrl: image_url,
+            logoUrl: image_url ?? null,
           },
         });
 

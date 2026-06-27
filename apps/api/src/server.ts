@@ -6,6 +6,7 @@ import multipart from "@fastify/multipart";
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
 import rawBody from "fastify-raw-body";
+import fastifyWebsocket from "@fastify/websocket";
 
 import { prismaPlugin } from "./plugins/prisma";
 import { redisPlugin } from "./plugins/redis";
@@ -23,6 +24,9 @@ import { aiRoutes } from "./modules/ai/ai.routes";
 import { campaignRoutes } from "./modules/campaigns/campaigns.routes";
 import { sequenceRoutes } from "./modules/campaigns/sequences.routes";
 import { trackingRoutes } from "./modules/campaigns/tracking.routes";
+import { analyticsRoutes } from "./modules/analytics/analytics.routes";
+import { workflowsRoutes } from "./modules/workflows/workflows.routes";
+import { notificationsRoutes } from "./modules/notifications/notifications.routes";
 
 export async function buildServer() {
   const app = Fastify({
@@ -129,6 +133,7 @@ export async function buildServer() {
   await app.register(prismaPlugin);
   await app.register(redisPlugin);
   await app.register(clerkPlugin);
+  await app.register(fastifyWebsocket);
 
   // ── Error Handler ────────────────────────────────────────────────────────
   app.setErrorHandler(errorHandler);
@@ -150,7 +155,9 @@ export async function buildServer() {
   await app.register(sequenceRoutes, { prefix: "/campaigns" });
   await app.register(trackingRoutes, { prefix: "/track" });
   await app.register(aiRoutes, { prefix: "/ai" });
-  // await app.register(analyticsRoutes, { prefix: "/analytics" });
+  await app.register(analyticsRoutes, { prefix: "/analytics" });
+  await app.register(workflowsRoutes, { prefix: "/workflows" });
+  await app.register(notificationsRoutes, { prefix: "/notifications" });
   // await app.register(billingRoutes, { prefix: "/billing" });
 
   return app;

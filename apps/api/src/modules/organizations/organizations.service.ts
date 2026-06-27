@@ -63,7 +63,7 @@ export async function getOrganizationById(
   // In a real implementation with Clerk, you might rely on Clerk's token 
   // claims for org membership. But we double check the DB here.
   const membership = await fastify.db.teamMember.findFirst({
-    where: { organizationId: orgId, userId },
+    where: { workspace: { organizationId: orgId }, userId },
   });
 
   if (!membership) {

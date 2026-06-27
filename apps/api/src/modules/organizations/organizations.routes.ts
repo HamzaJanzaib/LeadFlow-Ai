@@ -63,7 +63,7 @@ export const orgRoutes: FastifyPluginAsync = async (fastify) => {
     async (request, reply) => {
       const orgId = request.organizationId!;
       const members = await fastify.db.teamMember.findMany({
-        where: { organizationId: orgId },
+        where: { workspace: { organizationId: orgId } },
         include: { user: { select: { id: true, email: true, name: true } } },
       });
       return reply.send(members);

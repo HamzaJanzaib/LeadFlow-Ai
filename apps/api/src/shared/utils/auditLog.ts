@@ -26,13 +26,13 @@ export async function logEvent(
     await db.auditLog.create({
       data: {
         organizationId,
-        userId,
+        userId: userId ?? null,
         action,
         resource,
-        resourceId,
+        resourceId: resourceId ?? null,
         payload,
         ipAddress: request.ip,
-        userAgent: request.headers["user-agent"],
+        userAgent: request.headers["user-agent"] ?? null,
       },
     });
   } catch (error) {
