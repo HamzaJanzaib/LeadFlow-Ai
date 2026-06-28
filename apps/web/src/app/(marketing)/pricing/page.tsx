@@ -143,7 +143,7 @@ export default function PricingPage() {
                 ))}
               </ul>
               
-              <Link href={plan.name === "Enterprise" ? "/contact" : "/signup"} className="mt-auto">
+              <Link href={plan.name === "Enterprise" ? "/contact" : "/sign-up"} className="mt-auto">
                 <Button 
                   className="w-full" 
                   variant={plan.popular ? "default" : "outline"}

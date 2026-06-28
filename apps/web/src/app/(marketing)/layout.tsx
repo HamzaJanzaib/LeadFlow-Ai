@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { UserButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { Button } from "@/components/ui/Button";
 import { Metadata } from "next";
 
@@ -29,11 +31,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function MarketingLayout({
+export default async function MarketingLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { userId } = await auth();
+
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -53,14 +57,27 @@ export default function MarketingLayout({
           </div>
           <div className="flex items-center space-x-4">
             <nav className="flex items-center space-x-2">
-              <Link href="/login">
-                <Button variant="ghost" size="sm">
-                  Log in
-                </Button>
-              </Link>
-              <Link href="/signup">
-                <Button size="sm">Get Started</Button>
-              </Link>
+              {!userId ? (
+                <>
+                  <Link href="/sign-in">
+                    <Button variant="ghost" size="sm">
+                      Log in
+                    </Button>
+                  </Link>
+                  <Link href="/sign-up">
+                    <Button size="sm">Get Started</Button>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/dashboard">
+                    <Button variant="ghost" size="sm" className="mr-2">
+                      Dashboard
+                    </Button>
+                  </Link>
+                  <UserButton />
+                </>
+              )}
             </nav>
           </div>
         </div>

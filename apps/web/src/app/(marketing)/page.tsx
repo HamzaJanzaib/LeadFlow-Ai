@@ -56,7 +56,7 @@ export default function MarketingPage() {
             variants={itemVariants}
             className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
           >
-            <Link href="/signup">
+            <Link href="/sign-up">
               <Button size="lg" className="w-full sm:w-auto text-base h-12 px-8">
                 Start for free
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -172,7 +172,7 @@ export default function MarketingPage() {
           <p className="text-xl opacity-90 max-w-2xl mx-auto mb-10">
             Join thousands of modern agencies and freelancers closing more deals with LeadFlow AI.
           </p>
-          <Link href="/signup">
+          <Link href="/sign-up">
             <Button size="lg" variant="secondary" className="text-primary hover:bg-white text-lg h-14 px-10">
               Get Started for Free
             </Button>
