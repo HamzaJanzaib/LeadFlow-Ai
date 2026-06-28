@@ -1,50 +1,28 @@
-import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
+"use client";
 
-export default async function SettingsPage() {
-  const { userId, orgId } = await auth();
+import { Settings } from "lucide-react";
 
-  if (!userId) redirect("/sign-in");
-  if (!orgId) redirect("/onboarding");
-
+export default function SettingsPage() {
   return (
-    <div className="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Organization Settings</h1>
-      
-      <div className="mt-8 space-y-6">
-        <div className="bg-white dark:bg-slate-900 shadow sm:rounded-lg overflow-hidden">
-          <div className="px-4 py-5 sm:p-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">API Keys</h3>
-            <div className="mt-2 max-w-xl text-sm text-gray-500 dark:text-gray-400">
-              <p>Manage API keys to authenticate programmatic access to your organization's resources.</p>
-            </div>
-            <div className="mt-5">
-              <button
-                type="button"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
-              >
-                Generate New Key
-              </button>
-            </div>
+    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-8 animate-fade-in">
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-primary/10 rounded-lg text-primary">
+            <Settings className="w-6 h-6" />
           </div>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Settings</h1>
         </div>
+        <p className="text-muted-foreground">
+          Manage your organization, billing, API keys, and notification preferences.
+        </p>
+      </div>
 
-        <div className="bg-white dark:bg-slate-900 shadow sm:rounded-lg overflow-hidden">
-          <div className="px-4 py-5 sm:p-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">Billing</h3>
-            <div className="mt-2 max-w-xl text-sm text-gray-500 dark:text-gray-400">
-              <p>Manage your subscription plan, payment methods, and billing history via Stripe.</p>
-            </div>
-            <div className="mt-5">
-              <button
-                type="button"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
-              >
-                Manage Billing
-              </button>
-            </div>
-          </div>
-        </div>
+      <div className="bg-card border border-border rounded-xl shadow-sm p-12 text-center flex flex-col items-center justify-center min-h-[400px]">
+        <Settings className="w-12 h-12 text-muted-foreground/30 mb-4" />
+        <h3 className="text-xl font-medium text-card-foreground">Workspace Configuration</h3>
+        <p className="text-muted-foreground max-w-md mt-2">
+          Stripe integration, Team Management, and General Settings panels will appear here.
+        </p>
       </div>
     </div>
   );
