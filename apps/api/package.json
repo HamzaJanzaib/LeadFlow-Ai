@@ -4,7 +4,7 @@
   "private": true,
   "main": "dist/index.js",
   "scripts": {
-    "dev": "tsx watch --require ./src/monitoring/tracing.ts src/index.ts",
+    "dev": "tsx watch --import ./src/monitoring/tracing.ts src/index.ts",
     "build": "tsc",
     "start": "node --require ./dist/monitoring/tracing.js dist/index.js",
     "lint": "eslint src --ext .ts",
@@ -35,7 +35,7 @@
     "fastify": "^4.28.1",
     "fastify-metrics": "^13.2.1",
     "fastify-plugin": "^6.0.0",
-    "fastify-raw-body": "^5.0.0",
+    "fastify-raw-body": "^4.3.0",
     "ioredis": "^5.3.2",
     "prom-client": "^15.1.3",
     "stripe": "^22.3.0",

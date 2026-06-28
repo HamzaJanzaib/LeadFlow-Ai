@@ -17,15 +17,21 @@ import {
   Activity,
   Calendar,
   MoreHorizontal,
-  Loader2
+  Loader2,
+  Megaphone,
+  X
 } from "lucide-react";
 import { useAuth } from "@clerk/nextjs";
 
+import { useState } from "react";
 export default function LeadDetailPage() {
   const { id } = useParams() as { id: string };
   const router = useRouter();
   const queryClient = useQueryClient();
   const { isLoaded, userId, getToken } = useAuth();
+  
+  const [isCampaignModalOpen, setIsCampaignModalOpen] = useState(false);
+  const [selectedCampaignId, setSelectedCampaignId] = useState("");
 
   const { data: lead, isLoading, isError } = useQuery({
     queryKey: ["lead", id],
@@ -70,6 +76,29 @@ export default function LeadDetailPage() {
       queryClient.invalidateQueries({ queryKey: ["leads"] });
       router.push("/dashboard/leads");
     },
+  });
+
+  const { data: campaigns } = useQuery({
+    queryKey: ["campaigns"],
+    queryFn: async () => {
+      const token = await getToken();
+      return await apiClient.get<any[]>("/campaigns", { ...(token && { token }) });
+    },
+    enabled: isLoaded && !!userId,
+  });
+
+  const { mutate: enrollInCampaign, isPending: isEnrolling } = useMutation({
+    mutationFn: async () => {
+      const token = await getToken();
+      return await apiClient.post(`/campaigns/${selectedCampaignId}/leads`, { leadId: id }, { ...(token && { token }) });
+    },
+    onSuccess: () => {
+      toast.success("Lead enrolled in campaign");
+      setIsCampaignModalOpen(false);
+      setSelectedCampaignId("");
+      queryClient.invalidateQueries({ queryKey: ["lead", id] });
+    },
+    onError: () => toast.error("Failed to enroll lead"),
   });
 
   if (isLoading) {

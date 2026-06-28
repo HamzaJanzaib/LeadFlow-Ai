@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import { 
   LayoutDashboard, 
   Users, 
@@ -10,9 +11,11 @@ import {
   Bot, 
   Workflow, 
   BarChart3, 
-  Settings 
+  Settings,
+  Boxes
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/global/Logo";
 
 const NAV_LINKS = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
@@ -28,16 +31,23 @@ const BOTTOM_LINKS = [
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
-export function Sidebar() {
+export function Sidebar({ className }: { className?: string }) {
   const pathname = usePathname();
+  const { isLoaded, isSignedIn, user } = useUser();
 
   return (
-    <aside className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full md:translate-x-0 border-r border-border bg-card">
-      <div className="flex flex-col h-full px-3 py-4">
-        <Link href="/" className="flex items-center pl-2.5 mb-8">
-          <span className="self-center text-xl font-bold whitespace-nowrap text-primary">LeadFlow AI</span>
-        </Link>
-        <ul className="space-y-2 font-medium flex-1">
+    <aside className={cn("fixed left-0 top-0 z-40 h-screen w-64 border-r border-border bg-card transition-transform lg:translate-x-0 -translate-x-full", className)}>
+      <div className="flex h-full flex-col">
+        {/* Logo */}
+        <div className="flex h-16 items-center border-b border-border px-6">
+          <Link href="/dashboard" className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+              <Boxes className="h-5 w-5 text-primary-foreground" />
+            </div>
+            <Logo className="h-6 w-auto text-primary" />
+          </Link>
+        </div>
+        <ul className="space-y-2 font-medium flex-1 px-3 py-4">
           {NAV_LINKS.map((link) => {
             const isActive = pathname === link.href || (link.href !== "/dashboard" && pathname.startsWith(link.href));
             return (

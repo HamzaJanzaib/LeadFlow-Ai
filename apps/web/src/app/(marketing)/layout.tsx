@@ -31,6 +31,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { Logo } from "@/components/global/Logo";
+
 export default async function MarketingLayout({
   children,
 }: {
@@ -39,12 +41,12 @@ export default async function MarketingLayout({
   const { userId } = await auth();
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between">
+    <div className="min-h-screen bg-background flex flex-col font-sans antialiased">
+      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
           <div className="flex gap-6 md:gap-10">
             <Link href="/" className="flex items-center space-x-2">
-              <span className="font-bold text-xl inline-block text-primary">LeadFlow AI</span>
+              <Logo className="h-6 w-auto text-primary" />
             </Link>
             <nav className="hidden md:flex gap-6">
               <Link href="/pricing" className="flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
