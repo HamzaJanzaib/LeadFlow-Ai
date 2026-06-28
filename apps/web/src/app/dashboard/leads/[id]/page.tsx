@@ -1,170 +1,269 @@
 "use client";
 
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useParams, useRouter } from "next/navigation";
+import { apiClient } from "@/lib/api-client";
+import { toast } from "sonner";
 import Link from "next/link";
-import { ArrowLeft, Edit, Trash2, Mail, ExternalLink, Activity, Globe, Sparkles } from "lucide-react";
+import { 
+  ArrowLeft, 
+  Building2, 
+  Globe, 
+  Mail, 
+  MapPin, 
+  Zap, 
+  Search,
+  Users,
+  Activity,
+  Calendar,
+  MoreHorizontal,
+  Loader2
+} from "lucide-react";
+import { useAuth } from "@clerk/nextjs";
 
-export default function LeadDetailPage({ params }: { params: { id: string } }) {
-  // Mock data for display
-  const lead = {
-    id: params.id,
-    company: "Acme Corp",
-    email: "contact@acme.com",
-    status: "ENRICHED",
-    score: 85,
-    industry: "Technology",
-    website: "https://acme.com",
-    employees: 150,
-    revenue: "$5M - $10M",
-  };
+export default function LeadDetailPage() {
+  const { id } = useParams() as { id: string };
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { isLoaded, userId, getToken } = useAuth();
+
+  const { data: lead, isLoading, isError } = useQuery({
+    queryKey: ["lead", id],
+    queryFn: async () => {
+      const token = await getToken();
+      return await apiClient.get<any>(`/leads/${id}`, { ...(token && { token }) });
+    },
+    enabled: isLoaded && !!userId && !!id,
+  });
+
+  const { mutate: enrichLead, isPending: isEnriching } = useMutation({
+    mutationFn: async () => {
+      const token = await getToken();
+      return await apiClient.post(`/leads/${id}/enrich`, undefined, { ...(token && { token }) });
+    },
+    onSuccess: () => {
+      toast.success("Enrichment job started");
+      queryClient.invalidateQueries({ queryKey: ["lead", id] });
+    },
+    onError: () => toast.error("Failed to start enrichment"),
+  });
+
+  const { mutate: scanWebsite, isPending: isScanning } = useMutation({
+    mutationFn: async () => {
+      const token = await getToken();
+      return await apiClient.post(`/leads/${id}/scan`, { url: lead?.website }, { ...(token && { token }) });
+    },
+    onSuccess: () => {
+      toast.success("Website scan job started");
+      queryClient.invalidateQueries({ queryKey: ["lead", id] });
+    },
+    onError: () => toast.error("Failed to start scan"),
+  });
+
+  const { mutate: deleteLead, isPending: isDeleting } = useMutation({
+    mutationFn: async () => {
+      const token = await getToken();
+      return await apiClient.delete(`/leads/${id}`, { ...(token && { token }) });
+    },
+    onSuccess: () => {
+      toast.success("Lead deleted");
+      queryClient.invalidateQueries({ queryKey: ["leads"] });
+      router.push("/dashboard/leads");
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex-1 p-8 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (isError || !lead) {
+    return (
+      <div className="flex-1 p-8 flex flex-col items-center justify-center text-center">
+        <h2 className="text-xl font-bold mb-2">Lead not found</h2>
+        <p className="text-muted-foreground mb-4">This lead may have been deleted or doesn't exist.</p>
+        <Link href="/dashboard/leads" className="text-primary hover:underline">Return to Leads</Link>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex-1 space-y-6 p-8 pt-6">
-      <div className="flex items-center space-x-4">
-        <Link href="/leads" className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-10 w-10">
-          <ArrowLeft className="h-5 w-5" />
-        </Link>
-        <div className="flex-1">
-          <h2 className="text-3xl font-bold tracking-tight text-foreground">{lead.company}</h2>
-          <p className="text-muted-foreground flex items-center mt-1">
-            <Globe className="h-4 w-4 mr-1" />
-            <a href={lead.website} target="_blank" rel="noreferrer" className="hover:underline">{lead.website}</a>
-          </p>
-        </div>
-        <div className="flex items-center space-x-2">
-          <button className="inline-flex items-center justify-center rounded-md text-sm font-medium border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
-            <Mail className="mr-2 h-4 w-4" /> Email
-          </button>
-          <button className="inline-flex items-center justify-center rounded-md text-sm font-medium border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
-            <Edit className="mr-2 h-4 w-4" /> Edit
-          </button>
-          <button className="inline-flex items-center justify-center rounded-md text-sm font-medium border border-input bg-background hover:bg-destructive hover:text-destructive-foreground h-10 px-4 py-2 text-destructive">
-            <Trash2 className="mr-2 h-4 w-4" /> Delete
-          </button>
-        </div>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-xl border bg-card text-card-foreground shadow-sm p-6">
-          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <h3 className="tracking-tight text-sm font-medium text-muted-foreground">Lead Score</h3>
-            <Activity className="h-4 w-4 text-muted-foreground" />
+    <div className="flex-1 space-y-6 p-6 md:p-8 pt-6 max-w-7xl mx-auto animate-fade-in">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center space-x-4">
+          <Link href="/dashboard/leads" className="p-2 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowLeft className="w-5 h-5" />
+          </Link>
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-xl uppercase">
+              {lead.company.charAt(0)}
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
+                {lead.company}
+                <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-brand-50 text-brand-700 dark:bg-brand-900/30 dark:text-brand-300 border border-brand-200 dark:border-brand-800 uppercase tracking-wider">
+                  {lead.status}
+                </span>
+              </h2>
+              {lead.website && (
+                <a href={lead.website.startsWith('http') ? lead.website : `https://${lead.website}`} target="_blank" rel="noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 mt-1">
+                  <Globe className="w-3.5 h-3.5" /> {lead.website}
+                </a>
+              )}
+            </div>
           </div>
-          <div className="text-2xl font-bold text-green-500">{lead.score} / 100</div>
-          <p className="text-xs text-muted-foreground mt-1">High conversion probability</p>
         </div>
         
-        <div className="rounded-xl border bg-card text-card-foreground shadow-sm p-6">
-          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <h3 className="tracking-tight text-sm font-medium text-muted-foreground">Status</h3>
-          </div>
-          <div className="text-2xl font-bold">{lead.status}</div>
-          <p className="text-xs text-muted-foreground mt-1">Ready for outreach</p>
-        </div>
-
-        <div className="rounded-xl border bg-card text-card-foreground shadow-sm p-6">
-          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <h3 className="tracking-tight text-sm font-medium text-muted-foreground">Company Size</h3>
-          </div>
-          <div className="text-2xl font-bold">{lead.employees}</div>
-          <p className="text-xs text-muted-foreground mt-1">Employees</p>
-        </div>
-
-        <div className="rounded-xl border bg-card text-card-foreground shadow-sm p-6">
-          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <h3 className="tracking-tight text-sm font-medium text-muted-foreground">Est. Revenue</h3>
-          </div>
-          <div className="text-2xl font-bold">{lead.revenue}</div>
-          <p className="text-xs text-muted-foreground mt-1">Annual recurring</p>
+        <div className="flex items-center space-x-2">
+          <button 
+            onClick={() => scanWebsite()}
+            disabled={isScanning || !lead.website}
+            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-border bg-card text-card-foreground hover:bg-muted disabled:opacity-50 h-10 px-4 py-2"
+          >
+            {isScanning ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Search className="w-4 h-4 mr-2" />}
+            Scan Site
+          </button>
+          <button 
+            onClick={() => enrichLead()}
+            disabled={isEnriching}
+            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 h-10 px-4 py-2 shadow-sm"
+          >
+            {isEnriching ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Zap className="w-4 h-4 mr-2" />}
+            Enrich Data
+          </button>
+          <button 
+            onClick={() => {
+              if (window.confirm("Are you sure you want to delete this lead?")) {
+                deleteLead();
+              }
+            }}
+            disabled={isDeleting}
+            className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground disabled:opacity-50 h-10 px-4 py-2 ml-2"
+          >
+            {isDeleting ? "Deleting..." : "Delete"}
+          </button>
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <div className="rounded-xl border bg-card text-card-foreground shadow-sm col-span-4 p-6">
-          <div className="flex flex-col space-y-1.5 pb-4">
-            <h3 className="font-semibold leading-none tracking-tight">Enrichment Data</h3>
-            <p className="text-sm text-muted-foreground">Data gathered from Apollo & Hunter.io</p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* Left Column: Details */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
+            <div className="px-6 py-4 border-b border-border bg-muted/20 flex items-center gap-2">
+              <Building2 className="w-5 h-5 text-muted-foreground" />
+              <h3 className="font-semibold text-card-foreground">Company Intelligence</h3>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-4">
+                <div>
+                  <div className="text-sm font-medium text-muted-foreground mb-1">Industry</div>
+                  <div className="text-foreground">{lead.industry || "Unknown"}</div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-muted-foreground mb-1">Employees</div>
+                  <div className="text-foreground">{lead.employees ? `${lead.employees.toLocaleString()}` : "Unknown"}</div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-muted-foreground mb-1">Revenue</div>
+                  <div className="text-foreground">{lead.revenue ? `$${(lead.revenue / 1000000).toFixed(1)}M` : "Unknown"}</div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1"><Mail className="w-3.5 h-3.5"/> General Email</div>
+                  <div className="text-foreground">{lead.email || "—"}</div>
+                </div>
+                <div className="col-span-2">
+                  <div className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1"><MapPin className="w-3.5 h-3.5"/> Location</div>
+                  <div className="text-foreground">
+                    {[lead.city, lead.country].filter(Boolean).join(", ") || "—"}
+                  </div>
+                </div>
+              </div>
+              
+              {lead.description && (
+                <div className="mt-8 pt-6 border-t border-border">
+                  <div className="text-sm font-medium text-muted-foreground mb-2">Description</div>
+                  <p className="text-sm text-foreground leading-relaxed">{lead.description}</p>
+                </div>
+              )}
+            </div>
           </div>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Industry</p>
-                <p className="text-base">{lead.industry}</p>
+
+          <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
+            <div className="px-6 py-4 border-b border-border bg-muted/20 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-muted-foreground" />
+                <h3 className="font-semibold text-card-foreground">Decision Makers</h3>
               </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Primary Contact</p>
-                <p className="text-base flex items-center">
-                  {lead.email} <ExternalLink className="h-3 w-3 ml-2 text-muted-foreground" />
-                </p>
-              </div>
-              <div className="col-span-2">
-                <p className="text-sm font-medium text-muted-foreground mb-2">Technologies Detected</p>
-                <div className="flex flex-wrap gap-2">
-                  {["React", "Vercel", "Tailwind CSS", "Stripe"].map((tech) => (
-                    <span key={tech} className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
-                      {tech}
-                    </span>
-                  ))}
+              <button className="text-sm font-medium text-brand-500 hover:text-brand-600 transition-colors">Add Contact</button>
+            </div>
+            <div className="p-6 text-center text-muted-foreground">
+              <p>No contacts discovered yet.</p>
+              <button 
+                onClick={() => enrichLead()}
+                className="mt-4 inline-flex items-center text-sm font-medium text-primary hover:underline"
+              >
+                <Zap className="w-4 h-4 mr-1" /> Run enrichment to find contacts
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Score & Activity */}
+        <div className="space-y-6">
+          <div className="bg-card border border-border rounded-xl shadow-card p-6">
+            <h3 className="font-semibold text-card-foreground mb-4">Lead Score</h3>
+            <div className="flex items-end gap-4 mb-4">
+              <div className="text-5xl font-bold text-foreground">{lead.score ?? "—"}</div>
+              <div className="text-sm text-muted-foreground pb-1">out of 100</div>
+            </div>
+            <div className="w-full bg-muted rounded-full h-3 mb-6 overflow-hidden">
+              <div 
+                className={`h-3 rounded-full ${
+                  (lead.score ?? 0) > 80 ? 'bg-success' : 
+                  (lead.score ?? 0) > 50 ? 'bg-brand-500' : 'bg-warning'
+                }`} 
+                style={{ width: `${lead.score ?? 0}%` }}
+              ></div>
+            </div>
+            
+            <div className="space-y-3">
+              <div className="text-sm font-medium text-muted-foreground">AI Insight</div>
+              {lead.aiSummary ? (
+                <p className="text-sm text-foreground">{lead.aiSummary}</p>
+              ) : (
+                <p className="text-sm text-muted-foreground italic">Run enrichment or website scan to generate insights.</p>
+              )}
+            </div>
+          </div>
+
+          <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
+             <div className="px-6 py-4 border-b border-border bg-muted/20 flex items-center gap-2">
+              <Activity className="w-5 h-5 text-muted-foreground" />
+              <h3 className="font-semibold text-card-foreground">Activity Timeline</h3>
+            </div>
+            <div className="p-6">
+              <div className="relative border-l border-border ml-3 space-y-6">
+                <div className="relative pl-6">
+                  <div className="absolute -left-2.5 top-0 w-5 h-5 rounded-full bg-card border border-border flex items-center justify-center">
+                    <Calendar className="w-3 h-3 text-muted-foreground" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-foreground">Lead created</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {new Date(lead.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        
-        <div className="rounded-xl border bg-card text-card-foreground shadow-sm col-span-3 p-6">
-          <div className="flex flex-col space-y-1.5 pb-4">
-            <h3 className="font-semibold leading-none tracking-tight">Website Audit</h3>
-            <p className="text-sm text-muted-foreground">Latest scan results</p>
-          </div>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-medium">Performance</span>
-              <span className="text-sm font-bold text-yellow-500">72</span>
-            </div>
-            <div className="w-full bg-secondary rounded-full h-2">
-              <div className="bg-yellow-500 h-2 rounded-full" style={{ width: "72%" }}></div>
-            </div>
 
-            <div className="flex justify-between items-center mb-2 mt-4">
-              <span className="text-sm font-medium">SEO</span>
-              <span className="text-sm font-bold text-green-500">95</span>
-            </div>
-            <div className="w-full bg-secondary rounded-full h-2">
-              <div className="bg-green-500 h-2 rounded-full" style={{ width: "95%" }}></div>
-            </div>
-            
-            <div className="mt-6 p-4 bg-muted rounded-lg border relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-1 h-full bg-primary"></div>
-              <p className="text-sm font-semibold flex items-center">
-                <Sparkles className="h-4 w-4 mr-2 text-primary" />
-                AI Sales Insight
-              </p>
-              <p className="text-sm text-muted-foreground mt-2">
-                "Their website performance is lagging due to heavy images. Pitch our fast-loading CDN integration services."
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* AI Outreach Panel */}
-      <div className="rounded-xl border border-primary/20 bg-card text-card-foreground shadow-sm">
-        <div className="p-6 pb-4 border-b bg-muted/30">
-          <h3 className="font-semibold leading-none tracking-tight flex items-center text-lg">
-            <Sparkles className="h-5 w-5 mr-2 text-primary" />
-            AI Outreach Generator
-          </h3>
-          <p className="text-sm text-muted-foreground mt-1">Generate a highly personalized email sequence based on {lead.company}'s data.</p>
-        </div>
-        <div className="p-6 space-y-4">
-          <div className="flex gap-4">
-            <button className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground h-10 px-4 transition-colors hover:bg-primary/90">
-              Generate Draft
-            </button>
-            <div className="flex-1 bg-muted rounded-md border p-4 text-sm text-muted-foreground font-mono">
-              // Click generate to see drafted email...
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
